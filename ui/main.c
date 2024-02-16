@@ -560,7 +560,6 @@ int main(int argc, char **argv)
 		ret = -1;
 		goto fail_sockets;
 	}
-
 	printc_dbg("%s", version_text);
 	printc_dbg("%s\n", chipinfo_copyright());
 	if (setup_driver(&args) < 0) {

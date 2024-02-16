@@ -113,8 +113,8 @@ static int set_nonstandard_rate(int fd, struct termios *attr, int rate)
 #endif
 
 sport_t sport_open(const char *device, int rate, int flags)
-{
-	int fd = open(device, O_RDWR | O_NOCTTY);
+{	
+	int fd = open(device, O_RDWR | O_NOCTTY | O_NDELAY);	
 	struct termios attr;
 	int rate_code = rate_to_code(rate);
 
@@ -122,6 +122,17 @@ sport_t sport_open(const char *device, int rate, int flags)
 		return -1;
 
 	tcgetattr(fd, &attr);
+
+	// Enable blocking read
+	fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0) & ~O_NONBLOCK);
+
+	attr.c_oflag = 0;
+   	attr.c_lflag = 0;
+   	attr.c_iflag &= (IXON | IXOFF | IXANY);
+   	attr.c_cflag |= CLOCAL | CREAD;
+   	attr.c_cflag &= ~HUPCL;
+	// Disable flow control
+	attr.c_cflag &= ~(IXON | IXOFF | IXANY);
 
 #ifdef __sun__
 	attr.c_iflag &= ~(IMAXBEL | IGNBRK | BRKINT | PARMRK | ISTRIP |

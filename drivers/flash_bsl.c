@@ -583,7 +583,7 @@ static device_t flash_bsl_open(const struct device_args *args)
 	}
 
 
-	crc_selftest( );
+	crc_selftest();
 
 	memset(dev, 0, sizeof(*dev));
 	dev->base.type = &device_flash_bsl;

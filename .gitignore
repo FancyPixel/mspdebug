@@ -4,3 +4,4 @@ mspdebug
 mspdebug.exe
 inst/
 config.mk
+.vscode
